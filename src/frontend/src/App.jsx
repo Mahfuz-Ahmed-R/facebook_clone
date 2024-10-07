@@ -1,15 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Home from './pages/Home';
+import react from "react"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import CreateAccountForm from "./components/CreateAccountForm"
+import Home from "./pages/Home"
+import Login from "./components/Login"
+import ProtectedRoute from "./components/ProtectedRoute"
+
+
+
+function Logout() {
+  localStorage.clear()
+  return <Navigate to="/login" />
+}
+
+function RegisterAndLogout() {
+  localStorage.clear()
+  return <CreateAccountForm/>
+}
 
 function App() {
   return (
-    <>
-      <Home/>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/register" element={<RegisterAndLogout />} />
+        {/* <Route path="*" element={<NotFound />}></Route> */}
+      </Routes>
+    </BrowserRouter>
   )
 }
 

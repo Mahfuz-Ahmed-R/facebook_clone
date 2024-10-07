@@ -1,61 +1,37 @@
 import React from "react";
-import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
-import { FaFacebook, FaHome, FaTv, FaStore, FaUsers, FaGamepad, FaTh, FaFacebookMessenger, FaBell } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import {
+  HomeOutlined,
+  ProductOutlined,
+  ShopOutlined,
+  UsergroupAddOutlined,
+} from "@ant-design/icons";
 
-const NavBar = () => {
+const Navbar = () => {
+  const navigate = useNavigate();
   return (
-    <Navbar bg="dark" variant="dark" className="p-2">
-      {/* Left side */}
-      <Navbar.Brand href="#home">
-        <FaFacebook size={30} className="text-primary" />
-      </Navbar.Brand>
-      <Form className="d-flex mx-2" inline>
-        <FormControl type="text" placeholder="Search Facebook" className="mr-sm-2" />
-      </Form>
-
-      {/* Center */}
-      <Nav className="mx-auto">
-        <Nav.Link href="#home">
-          <FaHome size={25} className="text-primary" />
-        </Nav.Link>
-        <Nav.Link href="#watch">
-          <FaTv size={25} className="text-muted" />
-        </Nav.Link>
-        <Nav.Link href="#marketplace">
-          <FaStore size={25} className="text-muted" />
-        </Nav.Link>
-        <Nav.Link href="#groups">
-          <FaUsers size={25} className="text-muted" />
-        </Nav.Link>
-        <Nav.Link href="#games">
-          <FaGamepad size={25} className="text-muted" />
-        </Nav.Link>
-      </Nav>
-
-      {/* Right side */}
-      <Nav>
-        <Nav.Link href="#grid">
-          <FaTh size={25} className="text-muted" />
-        </Nav.Link>
-        <Nav.Link href="#messenger">
-          <FaFacebookMessenger size={25} className="text-muted" />
-        </Nav.Link>
-        <Nav.Link href="#notifications">
-          <FaBell size={25} className="text-muted" />
-        </Nav.Link>
-        <Nav.Link href="#profile">
-          {/* Profile picture */}
-          <img
-            src="profile.jpg" // Replace with your profile image path
-            alt="Profile"
-            className="rounded-circle"
-            width="30"
-            height="30"
-          />
-        </Nav.Link>
-      </Nav>
-    </Navbar>
+    <nav>
+      <div className="d-flex justify-content-evenly align-items-center" style={{ backgroundColor: "#001529" }}>
+        <div className="d-flex justify-content-evenly align-items-center" style={{marginLeft: "5%", width: "80%" }}>
+          <p onClick={() => navigate("/")} className="h2 text-white" style={{cursor: "pointer"}}>
+            <HomeOutlined />
+          </p>
+          <p onClick={() => navigate("/product")} className="h2 text-white" style={{cursor: "pointer"}}>
+            <ProductOutlined />
+          </p>
+          <p onClick={() => navigate("/shop")} className="h2 text-white" style={{cursor: "pointer"}}>
+            <ShopOutlined />
+          </p>
+          <p onClick={() => navigate("/friends")} className="h2 text-white" style={{cursor: "pointer"}}>
+            <UsergroupAddOutlined />
+          </p>
+        </div>
+        <div>
+          <img src="sdsd" alt="logo" />
+          </div>
+      </div>
+    </nav>
   );
 };
 
-export default NavBar;
+export default Navbar;
