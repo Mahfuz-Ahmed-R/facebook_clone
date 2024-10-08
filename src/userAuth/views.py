@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
@@ -13,6 +12,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework import permissions
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .serializers import UserSerializer
 # Create your views here.
@@ -36,4 +38,27 @@ class RegisterView(generics.CreateAPIView):
                 'message': 'User registered successfully!'
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLoginView(generics.GenericAPIView):
+    serializer_class = TokenObtainPairSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            token = AccessToken.for_user(user)
+            return Response({
+                'access': str(token),
+                'user':{
+                    'username': user.username,
+                    'email': user.email,
+                    'id': user.id,
+                }
+            })
+        return Response({'error': 'Invalid credentials'}, status=400)
+
+
     

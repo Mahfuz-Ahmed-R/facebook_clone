@@ -78,11 +78,6 @@ const Home = () => {
               {/* Additional Components */}
               <SharingPost />
               <Posts />
-              <Posts />
-              <Posts />
-              <Posts />
-              <Posts />
-              <Posts />
             </div>
           </Content>
         </Layout>

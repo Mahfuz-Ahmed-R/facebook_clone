@@ -1,24 +1,53 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom"; // To navigate after successful login
+import axios from 'axios'; // Make sure to import axios
+import api from '../api'
+import {useUser} from './UserProvider'
 
-const Login= () => {
+const Login = () => {
+  const {setUser} = useUser()
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    username: "",
+    password: "",
   });
+  const [error, setError] = useState(null); // To handle and display errors
+  const navigate = useNavigate(); // Initialize navigation
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', formData);
-    // Here you would typically send the login request to your backend
+    setError(null); // Reset error state
+    try {
+      console.log("Login attempt:", formData);
+  
+      const response = await api.post("/get_user/", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      // The response data will be available in response.data
+      console.log('Login response:', response.data);
+      const user = response.data["user"]
+      setUser(user)   
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);
+  
+      // Optionally, navigate to a protected route after successful login
+      navigate("/"); // Replace with your desired route
+    } catch (error) {
+      // Handle errors from the server
+      console.error("Error:", error.response ? error.response.data : error.message);
+      setError(error.response?.data?.detail || "Login failed"); // Extract error message
+    }
   };
 
   return (
@@ -28,23 +57,31 @@ const Login= () => {
           <div className="card">
             <div className="card-body">
               <h2 className="card-title text-center mb-4">Login</h2>
-              <p className="text-center text-muted mb-4">Login</p>
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email</label>
+                  <label htmlFor="username" className="form-label">
+                    Username
+                  </label>
                   <input
-                    type="email"
+                    type="text"
                     className="form-control"
-                    id="email"
-                    name="email"
-                    value={formData.email}
+                    id="username"
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
                     required
-                    placeholder="Email"
+                    placeholder="Username"
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password</label>
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
                   <input
                     type="password"
                     className="form-control"
@@ -57,8 +94,15 @@ const Login= () => {
                   />
                 </div>
                 <div className="mb-3 form-check">
-                  <input type="checkbox" className="form-check-input" id="rememberMe" />
-                  <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="rememberMe"
+                    // Optionally handle "Remember me" functionality
+                  />
+                  <label className="form-check-label" htmlFor="rememberMe">
+                    Remember me
+                  </label>
                 </div>
                 <div className="d-grid gap-2">
                   <button type="submit" className="btn btn-primary">
@@ -67,7 +111,10 @@ const Login= () => {
                 </div>
               </form>
               <p className="text-center text-muted mt-3">
-                Don't have an account? <a href="/register" className="text-primary">Sign up here</a>
+                Don't have an account?{" "}
+                <a href="/register" className="text-primary">
+                  Sign up here
+                </a>
               </p>
             </div>
           </div>

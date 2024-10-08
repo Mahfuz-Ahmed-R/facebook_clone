@@ -6,9 +6,11 @@ import {
   ShopOutlined,
   UsergroupAddOutlined,
 } from "@ant-design/icons";
+import {useUser} from './UserProvider'
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const {user} = useUser();
   return (
     <nav>
       <div className="d-flex justify-content-evenly align-items-center" style={{ backgroundColor: "#001529" }}>
@@ -27,7 +29,7 @@ const Navbar = () => {
           </p>
         </div>
         <div>
-          <img src="sdsd" alt="logo" />
+          <button onClick={()=> navigate("/logout")} className="btn btn-danger">Logout</button>
           </div>
       </div>
     </nav>

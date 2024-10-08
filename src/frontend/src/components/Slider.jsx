@@ -7,13 +7,16 @@ import {
   } from '@ant-design/icons';
   import { Menu } from 'antd';
   import { Link } from 'react-router-dom';
+import {useUser} from './UserProvider';
 
 const Slider = () => {
+  const { user } = useUser(); // Get user context
+  console.log(user.username)
   return (
     <div>
     <Menu theme='dark' mode='inline' defaultSelectedKeys={['home']}>
       <Menu.Item key='home' icon={<HomeOutlined />}>
-        <Link to='/'>Mahfuz Ahmed</Link>
+        <Link to='/'>{user.username}</Link>
       </Menu.Item>
       <Menu.Item key='add-post' icon={<PlusCircleOutlined />}>
         <Link to='/add-post'>Memories</Link>
